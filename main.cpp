@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <string>
@@ -68,21 +67,23 @@ int y = SCREEN_HEIGHT / 2 - iH / 2;
 
 //÷àñòè 
 SDL_Rect clips[6];
-for (int i = 0; i < 30; ++i){
-    if (i / 10 == 0){
-        clips[i].x = 15;
-        clips[i].y = 170;
-        clips[i].w = iW;
-        clips[i].h = iH;
-    }
+for (int i = 0; i < 6; ++i){
+    // if (i / 10 == 0){
+    //     clips[i].x = 15;
+    //     clips[i].y = 170;
+    //     clips[i].w = iW;
+    //     clips[i].h = iH;
+    // }
 
-    else if( i==10){
-        clips[i].x = 15;
-        clips[i].y = 330;
-        clips[i].w = iW;//ТУТ НЕ РБАТОЕТЕТ!!!!!!!!!!1111
-        clips[i].h = iH;
-
-    }
+    // else if( i==10){
+    //     clips[i].x = 15;
+    //     clips[i].y = 330;
+    //     clips[i].w = iW;//ТУТ НЕ РБАТОЕТЕТ!!!!!!!!!!1111
+    //     clips[i].h = iH;
+    clips[i].x = 15;
+    clips[i].y = 170;
+    clips[i].w = iW;
+    clips[i].h = iH;
 }
 int useClip = 0;
 if (SDL_Init(SDL_INIT_EVERYTHING) == -1){
@@ -130,24 +131,27 @@ while (!quit)
 			 switch (e.key.keysym.sym){
                         case SDLK_d:
                             std::cout <<"pressed D(left)";
-							useClip=00;
+							useClip=1;
 							if (x+10<=SCREEN_WIDTH) x+=10;
 							break;
 						case SDLK_a:
                             std::cout <<"pressed A(right)";
-							useClip=10;
+							useClip=1;
                             if (x>=10) x-=10;
 							break;
 						case SDLK_w:
                             std::cout <<"pressed W(top)";
-							useClip=20;
+							useClip=1;
 							if (y>=10) y-=10;
 							break;
                         case SDLK_s:
                             std::cout <<"pressed S(bot)";
-							useClip=30;
-							if (y+10<=SCREEN_HEIGHT) y-=10;
+							useClip=1;
+							if (y+10<=SCREEN_HEIGHT) y+=10;
 							break;
+                        case SDLK_SPACE:
+                            useClip = 1;
+                            break;
                         default:
                                 break;
                 }
