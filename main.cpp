@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <string>
+#include <vector>
 #include "map.h"
 using namespace std;
 const int SCREEN_WIDTH = 1920;
@@ -85,6 +86,21 @@ for (int i = 0; i < 6; ++i){
     clips[i].w = iW;
     clips[i].h = iH;
 }
+class Bullet {
+public:
+    int direction;
+    int x = SCREEN_WIDTH/2;
+    int y = SCREEN_HEIGHT/2;
+    float speed = 0.8;
+    Bullet(SDL_Texture &wizard, float X, float Y){
+        x = X;
+        y = Y;
+        float speed = 0.8;
+    }
+    void update(float time, int x, int y){
+        x += speed*time;
+    }
+};
 int useClip = 0;
 if (SDL_Init(SDL_INIT_EVERYTHING) == -1){
        std::cout << SDL_GetError() << std::endl;
@@ -119,7 +135,7 @@ if (SDL_Init(SDL_INIT_EVERYTHING) == -1){
 bool quit = false;
 while (!quit)
 {
-	
+	vector <Bullet>puli;
 	while (SDL_PollEvent(&e))
 	{
 		if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
@@ -151,14 +167,13 @@ while (!quit)
 							break;
                         case SDLK_SPACE:
                             useClip = 1;
+                            puli.push_back(Bullet(*hero, x, y));
                             break;
                         default:
                                 break;
                 }
 		}
 	}
-	
-
 	SDL_RenderClear(renderer);
 	SDL_QueryTexture(background, NULL, NULL, &bW, &bH);
     for (int i = 0; i < HEIGHT_MAP; i++)
@@ -170,6 +185,11 @@ while (!quit)
     // SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
    
     // ApplySurface(x, y, image, renderer);
+    vector <Bullet> :: iterator it = puli.begin();
+    for (Bullet i : puli){
+        advance(it, i);
+        renderTexture(*it.wizard, renderer, x, y, &clips[useClip]);
+    }    
     renderTexture(hero, renderer, x, y, &clips[useClip]);
 	SDL_Delay(80);
 	SDL_RenderPresent(renderer);
