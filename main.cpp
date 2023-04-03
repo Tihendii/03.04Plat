@@ -92,12 +92,12 @@ public:
     int x = SCREEN_WIDTH/2;
     int y = SCREEN_HEIGHT/2;
     float speed = 0.8;
-    Bullet(SDL_Texture &wizard, float X, float Y){
+    Bullet(SDL_Texture *wizard, float X, float Y){
         x = X;
         y = Y;
         float speed = 0.8;
     }
-    void update(float time, int x, int y){
+    void update(Uint32 time, int x, int y){
         x += speed*time;
     }
 };
@@ -131,10 +131,11 @@ if (SDL_Init(SDL_INIT_EVERYTHING) == -1){
    
 
    SDL_Event e;
-
+Uint32 time = SDL_GetTicks();
 bool quit = false;
 while (!quit)
 {
+    time -= SDL_GetTicks();
 	vector <Bullet>puli;
 	while (SDL_PollEvent(&e))
 	{
@@ -167,7 +168,7 @@ while (!quit)
 							break;
                         case SDLK_SPACE:
                             useClip = 1;
-                            puli.push_back(Bullet(*hero, x, y));
+                            puli.push_back(Bullet(hero, x, y));
                             break;
                         default:
                                 break;
@@ -185,10 +186,13 @@ while (!quit)
     // SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
    
     // ApplySurface(x, y, image, renderer);
-    vector <Bullet> :: iterator it = puli.begin();
+    //vector <Bullet> :: iterator it = puli.begin();
+    
     for (Bullet i : puli){
-        advance(it, i);
-        renderTexture(*it.wizard, renderer, x, y, &clips[useClip]);
+        //advance(it, i);
+        useClip = 1;
+        *i.update(time, x, y);
+        renderTexture(hero, renderer, x, y, &clips[useClip]);
     }    
     renderTexture(hero, renderer, x, y, &clips[useClip]);
 	SDL_Delay(80);
